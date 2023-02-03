@@ -1,0 +1,212 @@
+#:import random random
+#: import gb gb
+#:import FadeTransition  kivy.uix.screenmanager.FadeTransition
+
+<GameManager>:
+    canvas.before:
+        Rectangle:
+            source:'Images/grey.png'
+            size:self.size
+            pos:self.pos
+        
+    Screen1:
+    Screen2:
+    Screen3:
+        
+<magic>:
+    source:''
+    keep_ratio:False
+    allow_stretch:True  
+    size_hint:(None,None)
+    pos: (self.parent.pos[0]-dp(20),self.parent.pos[1]+self.parent.height+dp(20)) if self.parent else (0,0)
+        
+<Pipe>:
+#    canvas.before:
+#        Rectangle:
+#            size:self.size
+#            pos:self.pos
+    theme:self.parent.pipe_theme if self.parent else 'grey'
+    source: 'Images/pipes/'+self.theme+'pipe.png'
+    size_hint:None,None
+    width:dp(48)
+    keep_ratio:False
+    allow_stretch:True  
+    
+    Image:
+#        canvas.before:
+#            Rectangle:
+#                size:self.size
+#                pos:self.pos
+        source:'Images/pipes/'+self.parent.theme+'cap.png'
+        id:cap
+        pos:(self.x,self.y)
+        size_hint:None,None
+        width:self.parent.width*1.5
+        height:dp(20)
+        keep_ratio:False
+        allow_stretch:True  
+#    
+#  
+#    Label:
+#        text:str(self.parent.pos)
+#        outline_color:(0,0,0,1)
+#        outline_width:5
+#        font_size:'8dp'
+#        pos:self.parent.center
+<Coin>:
+    canvas:
+        RoundedRectangle:
+            source:'Images/coin.png'
+            size:self.size
+            pos:self.pos
+            radius:[50]
+        
+    size_hint:None,None
+    size:dp(15),dp(15)
+    pos: (self.parent.x+self.parent.width,self.parent.y+self.parent.height) if self.parent else (0,0)
+    
+<Bird>:
+#    canvas.before:
+#        Color:
+#            rgba:1,1,1,1
+#        Rectangle:
+#            size:self.size
+#            pos:self.pos
+    flag :0
+    source:'Images/birds/%s_up.png'%random.choice(['greenbird','rosebird','brownbird'])
+#    allow_stretch:True
+#    keep_ratio:False
+    size_hint:None,None
+    size:dp(50),dp(50)
+#    keep_ratio:False
+#    allow_stretch:True  
+#    
+#    
+#    Label:
+#        text:str(self.parent.size)
+#        pos:self.parent.pos[0],self.parent.pos[1]
+#        outline_color:(0,0,0,1)
+#        outline_width:5
+#        font_size:dp(8)
+
+<Screen1>:
+                
+    name:'screen1'
+    
+    Image:
+        source:'Images/start.png'
+        allow_stretch:True
+        keep_ratio:False
+        size_hint:1,1
+        
+    FloatLayout:             
+        size_hint:1,1
+        pos:self.parent.pos
+                
+        Button:
+#            canvas.before:
+#                RoundedRectangle:
+#                    source:'Images/start.png'
+#                    size:self.size
+#                    pos:self.pos
+#                    radius:[20]
+                    
+            text:'START'
+            size_hint:.8,.3
+            font_name:gb.bebas
+            font_size:sp(20)
+            pos_hint:{'center_x':.5,'center_y':.5}
+            #pos:self.parent.center[0]-self.width/2,self.parent.center[1]-self.height/2
+            background_normal:''
+            background_color:(0,0,0,0)
+            outline_width:3
+            outline_color:(0,0,0,1)
+            on_release:
+                root.manager.transition.direction = 'right'
+                root.manager.transition = FadeTransition(duration=.7)
+                app.root.current= 'screen2'
+    
+<Screen2>:
+    
+    name:'screen2'
+    pipe_theme:'brown'
+    distance:0
+    points: 0
+    v: 850
+    c: 3
+    
+    FloatLayout:
+        
+        id:window
+        size_hint:1,1
+        pos:self.parent.pos
+        
+        src:'Images/bg/'+self.parent.pipe_theme+'.png'
+        
+        canvas.before:   
+            Rectangle:
+                source:'Images/bg/bg.png'#self.src
+                size:self.size
+                pos:self.pos
+                
+            Rectangle:
+                source:'Images/cloud.png'               
+                size:500,300
+                pos:self.parent.x,self.parent.y+self.height-200
+                            
+            Rectangle:
+                source:'Images/cloud.png'               
+                size:600,400
+                pos:self.parent.x+150,self.parent.y+self.height-240
+            Rectangle:
+                source:'Images/cloud.png'               
+                size:320,220
+                pos:self.parent.x+600,self.parent.y+self.height-220
+            Rectangle:
+                source:'Images/cloud.png'               
+                size:380,280
+                pos:self.parent.x+750,self.parent.y+self.height-280
+            
+            
+        Label:
+ #           canvas.after:
+#                Rectangle:
+#                    pos:self.pos
+#                    #radius:[20]
+                    
+            text:str(root.points)
+            outline_color:(0,0,0,1)
+            pos_hint:{'center_x':.5,'center_y':.8}
+            font_name:gb.bebas#random.choice([gb.caviar,gb.bebas,gb.seasrn,gb.wingding,gb.greatvibes])
+            outline_width:7
+            font_size:sp(50)
+            
+<Screen3>:   
+    name:'screen3'
+    score:0
+    best_score:0
+    
+    FloatLayout:
+        size_hint:1,1
+        pos:self.parent.pos
+
+        canvas.before:   
+            Rectangle:
+                source:'images/bg/bg.png'
+                size:self.size
+                pos:self.pos
+                
+        Label:
+            text:'YOUR SCORE : '+'0'+str(root.score) if len(str(root.score))==1 and root.score !=0 else 'YOUR SCORE : '+str(root.score)
+            pos_hint:{'center_x':.45,'center_y':.55}
+            font_name:gb.bebas
+            font_size:sp(40)
+            outline_width:1
+        
+        Label:
+            text:'BEST SCORE : '+str(root.best_score)
+            pos_hint:{'center_x':.45,'center_y':.45}
+            font_name:gb.bebas
+            font_size:sp(40)
+            outline_width:1
+            
