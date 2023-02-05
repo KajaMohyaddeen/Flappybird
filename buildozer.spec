@@ -47,7 +47,7 @@ requirements = python3,kivy,sqlite3
 presplash.filename = %(source.dir)s/splash.gif
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/logo.png
+icon.filename = %(source.dir)s/logo.pngn
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait

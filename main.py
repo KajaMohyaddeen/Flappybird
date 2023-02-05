@@ -38,7 +38,7 @@ class Bird(Image):
     
     def __init__(self, **kwargs):
         super(Bird, self).__init__(**kwargs)
-        self.velocity = 780#630
+        self.velocity = 630
         self.gravity = 1200#1200#820
         self.alive=True
         self.update_event=None
@@ -70,12 +70,12 @@ class Bird(Image):
             self.velocity = 630
             wing = SoundLoader.load('Audio/wing.wav')
             wing.volume = .1
-            #wing.play()
+            wing.play()
                     
     def on_touch_up(self,touch):
         if self.alive:
             self.source = self.source.split('_')[0]+'_down.png'
-            SoundLoader.load('Audio/swoosh.wav').play()
+            #SoundLoader.load('Audio/swoosh.wav').play()
           
 class magic(Image):
     pass
@@ -130,9 +130,9 @@ class Screen2(Screen):
                 
     def move_pipes(self,dt):
         self.p = None
-        #def sound():
-            #self.p=SoundLoader.load('Audio/points.wav')
-            #self.p.play()
+        def sound():
+            self.p=SoundLoader.load('Audio/points.wav')
+            self.p.play()
         
         game_speed = 900#550 
         
