@@ -1,4 +1,3 @@
-import kivy
 from kivy.app import App
 from kivy.uix.image import Image
 import sqlite3 as sl
