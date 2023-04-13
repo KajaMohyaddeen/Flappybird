@@ -8,6 +8,7 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen, WipeTransition
 from kivy.uix.widget import Widget
 from kivy.app import App
+from kivy.properties import NumericProperty
 
 Config.set('graphics', 'width', '2400')
 Config.set('graphics', 'height', '1080')
@@ -38,8 +39,8 @@ class Bird(Image):
 
     def __init__(self, **kwargs):
         super(Bird, self).__init__(**kwargs)
-        self.velocity = 630
-        self.gravity = 1200  # 1200#820
+        self.velocity = 650
+        self.gravity = 1650
         self.alive = True
         self.update_event = None
         self.flag = 0
@@ -49,15 +50,15 @@ class Bird(Image):
 
     def is_collide_pipe(self, pipe):
         if self.collide_widget(pipe):
-            return False
+            return True
 
     def is_collide_magic_bottle(self, bottle):
         if self.collide_widget(bottle):
             return True
 
     def update(self, dt):
-        self.y += self.velocity * dt
-        self.velocity -= self.gravity * dt
+        self.y += self.velocity * dt 
+        self.velocity -= self.gravity * dt 
 
     def on_touch_down(self, touch):
 
@@ -66,16 +67,19 @@ class Bird(Image):
                 self.flag = 1
                 self.update_delay()
                 Clock.schedule_once(lambda dt: self.parent.manager.get_screen('screen2').start_move(), 1)
-            self.source = self.source.split('_')[0] + '_up.png'
-            self.velocity = 630
-            # wing = SoundLoader.load('Audio/wing.wav')
-            # wing.volume = .1
-            # wing.play()
+            self.source = self.source.split('_')[0] + '_down.png'
+            self.velocity = 870
+            wing = SoundLoader.load('Audio/wing.wav')
+            wing.volume = .1
+            wing.play()
 
     def on_touch_up(self, touch):
+        
         if self.alive:
-            self.source = self.source.split('_')[0] + '_down.png'
-            # SoundLoader.load('Audio/swoosh.wav').play()
+            self.velocity = 650
+            
+            self.source = self.source.split('_')[0] + '_up.png'
+            SoundLoader.load('Audio/swoosh.wav').play()
 
 
 class Magic(Image):
@@ -107,8 +111,9 @@ class Screen2(Screen):
     move_pipe = None
     magic = ''
     bottle = None
-    pipe_gap = 1000
-
+    pipe_gap = 1250
+    points = NumericProperty(0)
+    
     def __init__(self, **kwargs):
         super(Screen2, self).__init__(**kwargs)
         self.start1 = None
@@ -121,7 +126,7 @@ class Screen2(Screen):
         self.pipe_theme = None
         self.c = None
         self.v = None
-        self.points = None
+      
 
     def on_enter(self, *args):
         self.start1 = Clock.schedule_once(lambda x: self.start(), 0)
@@ -144,16 +149,15 @@ class Screen2(Screen):
         color = self.bottle.source.split('/')[-1].split('.')[0]
         self.pipe_theme = color
 
-        # anim = Animation(source='Images/bg/' + self.pipe_theme)
 
     def move_pipes(self, dt):
         self.p = None
+    
+        def sound():
+            self.p = SoundLoader.load('Audio/points.wav')
+            self.p.play()
 
-        # def sound():
-        #     self.p = SoundLoader.load('Audio/points.wav')
-        #     self.p.play()
-
-        game_speed = 900  # 550
+        game_speed = 1150  
 
         for pipe in self.pipes:
             pipe.x -= dt * game_speed
@@ -164,7 +168,7 @@ class Screen2(Screen):
 
             if self.bottle:
                 if self.bird.is_collide_magic_bottle(self.bottle):
-                    # SoundLoader.load('Audio/win.mp3').play()
+                    SoundLoader.load('Audio/win.mp3').play()
                     self.bottle.opacity = 0
                     self.remove_widget(self.bottle)
                     self.change_theme()
@@ -191,7 +195,7 @@ class Screen2(Screen):
             if self.points % 4 == 0 and self.points != 0:
                 self.magic = 'magic_bottle'
 
-            # Clock.schedule_once(lambda dt: sound(), .1)
+            Clock.schedule_once(lambda dt: sound(), .1)
 
         if self.distance >= (self.pipe_gap * self.c):
             self.add_pipes(3, self.magic)
@@ -245,8 +249,8 @@ class Screen2(Screen):
 
     def game_over(self):
 
-        # SoundLoader.load('Audio/hit.wav').play()
-        # SoundLoader.load('Audio/die.ogg').play()
+        SoundLoader.load('Audio/hit.wav').play()
+        SoundLoader.load('Audio/die.ogg').play()
 
         if self.move_pipe:
             self.move_pipe.cancel()
