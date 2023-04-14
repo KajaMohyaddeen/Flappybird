@@ -8,7 +8,8 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen, WipeTransition
 from kivy.uix.widget import Widget
 from kivy.app import App
-from kivy.properties import NumericProperty
+from kivy.uix.button import Button
+from kivy.properties import NumericProperty,StringProperty
 
 Config.set('graphics', 'width', '2400')
 Config.set('graphics', 'height', '1080')
@@ -39,8 +40,8 @@ class Bird(Image):
 
     def __init__(self, **kwargs):
         super(Bird, self).__init__(**kwargs)
-        self.velocity = 650
-        self.gravity = 1650
+        self.velocity = 500
+        self.gravity = 2000
         self.alive = True
         self.update_event = None
         self.flag = 0
@@ -68,7 +69,8 @@ class Bird(Image):
                 self.update_delay()
                 Clock.schedule_once(lambda dt: self.parent.manager.get_screen('screen2').start_move(), 1)
             self.source = self.source.split('_')[0] + '_down.png'
-            self.velocity = 870
+            self.velocity = 2000
+            self.gravity = 1500
             wing = SoundLoader.load('Audio/wing.wav')
             wing.volume = .1
             wing.play()
@@ -76,8 +78,8 @@ class Bird(Image):
     def on_touch_up(self, touch):
         
         if self.alive:
-            self.velocity = 650
-            
+            self.velocity = 500
+            self.gravity = 2000
             self.source = self.source.split('_')[0] + '_up.png'
             SoundLoader.load('Audio/swoosh.wav').play()
 
@@ -111,19 +113,18 @@ class Screen2(Screen):
     move_pipe = None
     magic = ''
     bottle = None
-    pipe_gap = 1250
+    pipe_gap = 2300
     points = NumericProperty(0)
+    pipe_theme = StringProperty('')
     
     def __init__(self, **kwargs):
         super(Screen2, self).__init__(**kwargs)
         self.start1 = None
         self.bird = None
-        self.pipe_theme = None
         self.p = None
         self.flag = None
         self.govr = None
-        self.distance = None
-        self.pipe_theme = None
+        self.distance = None        
         self.c = None
         self.v = None
       
@@ -157,7 +158,7 @@ class Screen2(Screen):
             self.p = SoundLoader.load('Audio/points.wav')
             self.p.play()
 
-        game_speed = 1150  
+        game_speed = 1360
 
         for pipe in self.pipes:
             pipe.x -= dt * game_speed
@@ -235,7 +236,7 @@ class Screen2(Screen):
             pipedown = Pipe()
             pipeup.flag = 1
 
-            pipedown.height = self.ids.window.height - (self.bird.height * 3) - pipeup.height
+            pipedown.height = self.ids.window.height - (self.bird.height * 3.5) - pipeup.height
 
             pipedown.ids.cap.pos = (self.x - 30, self.y + self.height)
             pipedown.pos = self.ids.window.pos[0] + i * self.pipe_gap, self.ids.window.pos[
@@ -303,27 +304,43 @@ class Screen2(Screen):
         con.close()
 
     def score_board(self):
-
+        self.reset()
         self.manager.transition = WipeTransition(duration=.8)
         self.manager.transition.direction = 'left'
         self.manager.current = 'screen3'
-        self.reset()
+    
 
 
 class Screen3(Screen):
     flag = 0
 
     def on_touch_down(self, touch):
-        if self.flag == 0:
-            Clock.schedule_once(lambda dt: self.go_home(), .5)
-            self.flag = 1
-
+        if self.collide_point(*touch.pos):
+            
+            if self.ids.reset.collide_point(*touch.pos):
+                self.Clear()
+                self.ids.reset.bgclr=(0,1,0,.5)               
+            else:    
+                
+                self.ids.reset.bgclr=(1,0,0,.5)    
+                if self.flag == 0:
+                    self.go_home()
+                    self.flag = 1
+        return super(Screen3, self).on_touch_down(touch)
+   
     def go_home(self):
-        self.manager.transition = WipeTransition(duration=.5)
+        self.manager.transition = WipeTransition(duration=.4)
         self.manager.transition.direction = 'left'
         self.manager.current = 'screen1'
-
-
+        
+    def Clear(self):
+        con = sl.connect('main.db')
+        cur = con.cursor()
+        cur.execute(""" UPDATE INFO SET points=0 WHERE id = 'best_score' """)
+        self.best_score = 0
+        con.commit()
+        con.close()
+        
 class Main(App):
 
     def build(self):

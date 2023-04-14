@@ -1,5 +1,5 @@
 #:import random random
-#: import gb gb
+#:import gb gb
 #:import FadeTransition  kivy.uix.screenmanager.FadeTransition
 
 <GameManager>:
@@ -112,7 +112,7 @@
 #                    radius:[20]
 #                    
             text:'START'
-            size_hint:.8,.3
+            size_hint:1,1
             font_name:gb.bebas
             font_size:sp(20)
             pos_hint:{'center_x':.5,'center_y':.5}
@@ -121,9 +121,9 @@
             background_color:(0,0,0,0)
             outline_width:3
             outline_color:(0,0,0,1)
-            on_release:
+            on_press:
                 root.manager.transition.direction = 'right'
-                root.manager.transition = FadeTransition(duration=.7)
+                root.manager.transition = FadeTransition(duration=.4)
                 app.root.current= 'screen2'
     
 <Screen2>:
@@ -209,4 +209,25 @@
             font_name:gb.bebas
             font_size:sp(40)
             outline_width:1
+            
+        Button:
+            canvas.before:
+                Color:
+                    rgba:self.bgclr
+                RoundedRectangle:
+                    size:self.size
+                    pos:self.pos
+                    radius:[30]
+            id:reset
+            text:'[b]RESET[/b]'
+            bgclr:(1,0,0,.5)
+            markup:True
+            size_hint:.25,.05
+            pos_hint:{'center_x':.8,'center_y':.95}
+            background_color:(0,0,0,0)
+            background_normal:''
+            font_name:gb.bebas
+            font_size:sp(20)
+            outline_width:1
+
             

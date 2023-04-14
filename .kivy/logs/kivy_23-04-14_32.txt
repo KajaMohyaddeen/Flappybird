@@ -1,4 +1,4 @@
-[INFO   ] Logger: Record log in /storage/emulated/0/Flappybird/.kivy/logs/kivy_23-04-13_99.txt
+[INFO   ] Logger: Record log in /storage/emulated/0/Flappybird/.kivy/logs/kivy_23-04-14_32.txt
 [INFO   ] Kivy: v2.0.0
 [INFO   ] Kivy: Installed at "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.9/site-packages/kivy/__init__.py"
 [INFO   ] Python: v3.9.7 (default, Oct  6 2021, 01:34:26) 
@@ -7,6 +7,7 @@
 [INFO   ] Audio: Providers: audio_sdl2 (audio_android, audio_ffpyplayer ignored)
 [INFO   ] Factory: 186 symbols loaded
 [INFO   ] Image: Providers: img_tex, img_dds, img_sdl2, img_pil (img_ffpyplayer ignored)
+[INFO   ] Text: Provider: sdl2
 [INFO   ] Window: Provider: sdl2
 [INFO   ] GL: Using the "OpenGL ES 2" graphics system
 [INFO   ] GL: Backend used <sdl2>
@@ -18,7 +19,6 @@
 [INFO   ] GL: Texture max units <16>
 [INFO   ] Window: auto add sdl2 input provider
 [INFO   ] Window: virtual keyboard not allowed, single mode, not docked
-[INFO   ] Text: Provider: sdl2
 [INFO   ] GL: NPOT texture support is available
 [WARNING] Base: Unknown <android> provider
 [INFO   ] Base: Start application main loop
