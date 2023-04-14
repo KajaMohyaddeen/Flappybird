@@ -116,6 +116,9 @@ class Screen2(Screen):
     pipe_gap = 2300
     points = NumericProperty(0)
     pipe_theme = StringProperty('')
+    v = NumericProperty(0)
+    distance = NumericProperty(0)
+    c = NumericProperty(0)
     
     def __init__(self, **kwargs):
         super(Screen2, self).__init__(**kwargs)
@@ -123,10 +126,8 @@ class Screen2(Screen):
         self.bird = None
         self.p = None
         self.flag = None
-        self.govr = None
-        self.distance = None        
-        self.c = None
-        self.v = None
+        self.govr = None   
+      
       
 
     def on_enter(self, *args):
